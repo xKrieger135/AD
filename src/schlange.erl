@@ -3,20 +3,25 @@
 
 % --------------------------------------------- CreateQ --------------------------------------------
 % createQ: ∅ → queue
+% Erstellt eine schlange, sie besteht aus 2 Stacks. Diese werden erstellt und als Schlange zurück gegeben.
 createQ() -> {queue, {stack:createS(), stack:createS()}}.
 
 % --------------------------------------------- front --------------------------------------------
 % front : queue → elem (Selektor)
+% Gibt das erste Element der Schlange zurück
+% Wenn der Outstack leer ist wird dieser Umgestapelt
 front({queue, {InStack, OutStack}}) -> case stack:isEmptyS(OutStack) of true -> umstapeln2(InStack, OutStack);
 																		false -> stack:top(OutStack) end.
 
 % --------------------------------------------- enqueue --------------------------------------------
-% enqueue : queue × elem → queue																		
+% enqueue : queue × elem → queue	
+% Hängt ein element an die Schlange an.																	
 enqueue({queue, {InStack, OutStack}}, Elem) -> {queue, {stack:push(InStack, Elem), OutStack}}.										       
 										  										 
 
 % --------------------------------------------- dequeue --------------------------------------------
 % dequeue : queue → queue (Mutator)	
+% Stapelt die Schlange um und löscht das letzte Element
 dequeue({queue, {InStack, OutStack}}) -> case stack:isEmptyS(OutStack) of 
 															true ->   umstapeln1(InStack, OutStack);
 															false -> {queue, {InStack, stack:pop(OutStack)}} end.
@@ -36,5 +41,6 @@ umstapeln2(Instack,Outstack) -> case stack:isEmptyS(Instack) of
 					end.					
 						
 % --------------------------------------------- isEmptyQ --------------------------------------------
-% isEmptyQ : queue → bool						
+% isEmptyQ : queue → bool	
+% GIbt true zurück wenn die schlange leer ist.					
 isEmptyQ({queue, {InStack, OutStack}}) -> stack:isEmptyS(InStack) andalso stack:isEmptyS(OutStack).
