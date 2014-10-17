@@ -1,16 +1,22 @@
 -module(liste).
 -compile(export_all).
  
-% Create() erstellt unsere ADT Liste  
+% --------------------------------------------- create --------------------------------------------
+% create:     ∅ → list
+% create erstellt unsere ADT Liste. 
 create() -> {list, {}}.
 
 
+% --------------------------------------------- isEmpty --------------------------------------------
+% isEmpty:     list → bool
+% isEmpty schaut, ob die eingabe Liste leer ist oder nicht.
 isEmpty(L) -> L == {list, {}}.
 							 
 
 
 % --------------------------------------------- Laenge --------------------------------------------
-%
+% laenge:       list → int
+% laenge prueft, wie lang unsere Eingabeliste ist.
 laenge({list, Liste}) -> if 
 							Liste == {} ->
 								0;
@@ -26,7 +32,8 @@ laenge_({_elem, Rest}, Pos) ->  if
 % ------------------------------------------------------------------------------------------------									
 
 % --------------------------------------------- Concat --------------------------------------------
-% 
+% concat:     list × list → list
+% Fuegt zwei Listen zu einer zusammen. Hierbei wird die zweite liste an die erste gehängt.
 concat({list, Liste}, {list, Liste2}) when Liste == {} andalso Liste2 == {} -> {list, {}};
 concat({list, Liste}, {list, Liste2}) -> 
 											if
@@ -48,6 +55,7 @@ zusammenkleben({First, Rest}, Liste) ->
 									
 % --------------------------------------------- Find ---------------------------------------------										
 % find: list × elem → pos
+% find sucht anhand eines Elements die Position dieses Elements heraus.
 find({list,Liste}, Elem) ->	
 								if 
 									Liste == {} -> 
@@ -67,7 +75,8 @@ findElement({First, Rest}, Elem, Counter) ->
 % ------------------------------------------------------------------------------------------------
 
 % --------------------------------------------- Retrieve --------------------------------------------
-% 
+% retrieve:     list × pos → elem
+% retrieve sucht anhand der Eingabe Position, ein bestimmtes Element.
 retrieve({list,Liste}, Pos) -> Laenge = laenge({list, Liste}), 
 								if 
 									Pos > Laenge ->
@@ -91,7 +100,8 @@ getElement({First, Rest}, Pos, Counter) ->
 % ------------------------------------------------------------------------------------------------											   
 
 % --------------------------------------------- Insert --------------------------------------------									   
-%			
+% insert:     list × pos × elem → list
+% insert fuegt ein Element in die Eingabeliste ein.			
 insert({list, Liste}, Pos, Elem) -> Laenge = laenge({list, Liste}),
 									if 
 										Liste == {} ->
@@ -114,7 +124,8 @@ insertIntoList({}, _,_,Elem) -> {Elem, {}}.
 % ------------------------------------------------------------------------------------------------												
 
 % --------------------------------------------- Delete --------------------------------------------	
-% delete: list × pos → list			
+% delete: list × pos → list		
+% delete loescht ein gegebenes Element aus einer Liste, falls dieses vorhanden ist.	
 delete({list, Liste}, Pos) -> Laenge = laenge({list, Liste}),
 								if 
 									Liste == {} ->
