@@ -1,10 +1,17 @@
 -module(arrayS).
 -compile(export_all).
 
+% --------------------------------------------- initA --------------------------------------------
+% initA: ∅ → array
 initA() -> {array, liste:create()}.
 
+
+% --------------------------------------------- lengthA --------------------------------------------
+% lengthA: array → pos
 lengthA({array, Array}) -> liste:laenge(Array).
 
+% --------------------------------------------- setA --------------------------------------------
+% setA: array × pos × elem → array
 setA({array, Array}, Pos, Elem) -> 	Newpos = Pos + 1, 
 									Arraygroeße = liste:laenge(Array), 
 									if
@@ -16,7 +23,8 @@ setA({array, Array}, Pos, Elem) -> 	Newpos = Pos + 1,
 											setA({array, Nullenauffueller}, Pos, Elem)
 									end.
 									
-													
+% --------------------------------------------- getA --------------------------------------------
+% getA: array × pos → elem													
 getA({array, Array}, Pos) -> LaengeA = lengthA({array, Array}), Pos1 = Pos + 1,
 								if 
 									Pos1 < 0 ->
