@@ -1,2 +1,0 @@
--Module(Zufall)
--compile(export_all)
