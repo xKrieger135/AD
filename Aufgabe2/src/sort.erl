@@ -18,24 +18,24 @@ insertionSort(Array,Start,Ende) ->
   if Start =< Ende ->
     EWert = ary:getA(Array,Start),
     Index = insertSuche(Array,Start,EWert),
-    ary:setA(Array,Index,EWert),
-    io:format("~nC-~p : ",[Index]),
-    io:format("~p   ",[EWert]),
-    insertionSort(Array,Start+1,Ende);
+%%     io:format("# C+~p:",[Index]),
+%%     io:format("|~p| ~n ",[EWert]),
+    io:format("~p - ",[Array]),
+    A=ary:setA(Array,Index,EWert),
+    io:format("~p~n",[A]),
+    insertionSort(A,Start+1,Ende);
   Start>Ende -> Array
   end.
 
 insertSuche(Array,Index,Wert) ->
+  Elem=ary:getA(Array,Index-1),
   if
-    Index > 1 ->
-      case ary:getA(Array,Index-1)>Wert of
-        true -> ary:setA(Array,Index,ary:getA(Array,Index-1)),
-          io:format("~p - ",[Index]),
-          io:format("~p : ",[ary:getA(Array,Index-1)]),
-          io:format("~p   ",[Wert]),
-          insertSuche(Array,Index-1,Wert);
-        false -> io:fwrite("Fail\n"),Index
-      end;
-    Index =< 1 ->
+    Index > 0 andalso Elem>Wert->
+      A=ary:setA(Array,Index,Elem),
+%%           io:format("~p - ",[Index]),
+%%           io:format("~p : ",[ary:getA(Array,Index-1)]),
+%%           io:format("~p   ",[Wert]),
+          insertSuche(A,Index-1,Wert);
+    Index =< 0 ->
       Index
   end.
