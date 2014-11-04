@@ -10,10 +10,13 @@
 -author("JanDennis").
 
 %% API
--export([insertionSort/3,shiftArray/4,selectionSort/1]).
+-export([insertionSort/1,selectionSort/1]).
 
 
 %%insertionsort(Array,Start,Ende)
+insertionSort(Array) ->
+  insertionSort(Array,2,ary:lengthA(Array)-1).
+
 insertionSort(Array,Start,Ende) ->
   if Start =< Ende ->
     EWert = ary:getA(Array,Start),
