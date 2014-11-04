@@ -32,7 +32,7 @@ fillRandom(Target,N,Cur,Max) -> T=ary:setA(Target,Cur,random:uniform(Max)),fillR
 getNumAscending(N) -> A=ary:initA(),fillAscending(A,N,0).
 
 fillAscending(Target,0,_Cur) -> Target;
-fillAscending(Target,N,Cur) -> T=ary:setA(Target,Cur,Cur),fillAscending(T,N-1,Cur+1).
+fillAscending(Target,N,Cur) -> T=ary:setA(Target,Cur,Cur+1),fillAscending(T,N-1,Cur+1).
 
 
 %% getNumDescending

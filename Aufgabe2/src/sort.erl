@@ -15,7 +15,7 @@
 
 %%insertionsort(Array,Start,Ende)
 insertionSort(Array) ->
-  insertionSort(Array,2,ary:lengthA(Array)-1).
+  insertionSort(Array,1,ary:lengthA(Array)-1).
 
 insertionSort(Array,Start,Ende) ->
   if Start =< Ende ->
