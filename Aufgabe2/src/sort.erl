@@ -10,7 +10,7 @@
 -author("JanDennis").
 
 %% API
--export([insertionSort/3]).
+-export([insertionSort/3,shiftArray/4,selectionSort/1]).
 
 
 %%insertionsort(Array,Start,Ende)
@@ -18,11 +18,7 @@ insertionSort(Array,Start,Ende) ->
   if Start =< Ende ->
     EWert = ary:getA(Array,Start),
     Index = insertSuche(Array,Start,EWert),
-%%     io:format("# C+~p:",[Index]),
-%%     io:format("|~p| ~n ",[EWert]),
-    io:format("~p - ",[Array]),
-    A=ary:setA(Array,Index,EWert),
-    io:format("~p~n",[A]),
+    A=shiftArray(Array,Index,EWert,Start),
     insertionSort(A,Start+1,Ende);
   Start>Ende -> Array
   end.
@@ -31,11 +27,54 @@ insertSuche(Array,Index,Wert) ->
   Elem=ary:getA(Array,Index-1),
   if
     Index > 0 andalso Elem>Wert->
-      A=ary:setA(Array,Index,Elem),
-%%           io:format("~p - ",[Index]),
-%%           io:format("~p : ",[ary:getA(Array,Index-1)]),
-%%           io:format("~p   ",[Wert]),
+      A=shiftArray(Array,Index-1,Elem,Index),
           insertSuche(A,Index-1,Wert);
-    Index =< 0 ->
+    true ->
       Index
   end.
+
+shiftArray(Array,Pos,Elem,End) ->
+  L=ary:lengthA(Array),
+ if
+   L==0 ->
+      ary:setA(Array,Pos,Elem);
+   L==Pos ->
+     ary:setA(Array,Pos,Elem);
+   Pos==End ->
+     ary:setA(Array,Pos,Elem);
+   true ->
+      E=ary:getA(Array,Pos),
+      A=ary:setA(Array,Pos,Elem),
+      shiftArray(A,Pos+1,E,End)
+  end.
+
+selectionSort(Array) ->
+  N=ary:lengthA(Array),
+  selectionSort(Array,0,N-1).
+
+selectionSort(Array,Pos,Pos) -> Array;
+selectionSort(Array,Pos,End) ->
+  Min=ary:getA(Array,Pos),
+  IndexMin = sucheMinimum(Array,Min,Pos,Pos),
+  A=tausche(Array,Pos,IndexMin),
+  selectionSort(A,Pos+1,End).
+
+sucheMinimum(Array,Min,Pos,MinPos) ->
+  Elem=ary:getA(Array,Pos),
+  L=ary:lengthA(Array),
+  if
+    Pos+1>L ->
+      MinPos;
+    true ->
+      if
+        Min>Elem ->
+          sucheMinimum(Array,Elem,Pos+1,Pos);
+        true ->
+          sucheMinimum(Array,Min,Pos+1,MinPos)
+      end
+  end.
+
+tausche(Ary,M,M1) ->
+  E=ary:getA(Ary,M),
+  E1=ary:getA(Ary,M1),
+  ary:setA(ary:setA(Ary,M,E1),M1,E).
