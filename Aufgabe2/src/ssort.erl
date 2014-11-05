@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 02. Nov 2014 19:00
 %%%-------------------------------------------------------------------
--module(vsort).
+-module(ssort).
 -author("JanDennis").
 
 %% API
@@ -61,7 +61,7 @@ selectionSort(Array,Pos,End, Count) ->
   Min=ary:getA(Array,Pos),
   {IndexMin, C} = sucheMinimum(Array,Min,Pos,Pos, Count),
   A=tausche(Array,Pos,IndexMin),
-%%  io:format("~p - ~p  ",[Count,C]),
+%% io:format("~p - ~p  ",[Count,C]),
   selectionSort(A,Pos+1,End, C).
 
 sucheMinimum(Array,Min,Pos,MinPos, Count) ->

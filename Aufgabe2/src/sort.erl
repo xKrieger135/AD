@@ -31,7 +31,7 @@ insertSuche(Array,Index,Wert) ->
   if
     Index > 0 andalso Elem>Wert->
       A=shiftArray(Array,Index-1,Elem,Index),
-          insertSuche(A,Index-1,Wert);
+      insertSuche(A,Index-1,Wert);
     true ->
       Index
   end.

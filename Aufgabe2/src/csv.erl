@@ -13,7 +13,8 @@
 -export([write/2]).
 
 %% IN: write([Anzahl_Elem, Dauer, Anzahl_Zugriffe, Anzahl_Swaps],File)
+
 write([A,B,C,D],File) ->
-  file:write_file(File, io_lib:fwrite("~p,~p,~p,~p\n",[A,B,C,D])).
+  file:write_file(File, io_lib:fwrite("~p,~p,~p,~p\n",[A,B,C,D]),[append]);
 write(String,File) ->
-  file:write_file(File,io_lib:fwrite("~p\n",[String])).
+  file:write_file(File,io_lib:fwrite("~p\n",[String]),[append]).
