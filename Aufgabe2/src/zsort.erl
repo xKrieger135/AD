@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 02. Nov 2014 19:00
 %%%-------------------------------------------------------------------
--module(vsort).
+-module(zsort).
 -author("JanDennis").
 
 %% API
@@ -15,26 +15,25 @@
 
 %%insertionsort(Array,Start,Ende)
 insertionSort(Array) ->
-  insertionSort(Array,1,ary:lengthA(Array)-1,0).
+  [util:timeMilliSecond(), insertionSort(Array,1,ary:lengthA(Array)-1)].
 
-insertionSort(Array,Start,Ende,Count) ->
+insertionSort(Array,Start,Ende) ->
   if Start =< Ende ->
     EWert = ary:getA(Array,Start),
-    {Index,C} = insertSuche(Array,Start,EWert, Count),
+    Index = insertSuche(Array,Start,EWert),
     A=shiftArray(Array,Index,EWert,Start),
-    insertionSort(A,Start+1,Ende,C);
-  Start>Ende -> Count
+    insertionSort(A,Start+1,Ende);
+  Start>Ende -> util:timeMilliSecond()
   end.
 
-insertSuche(Array,Index,Wert,Count) ->
+insertSuche(Array,Index,Wert) ->
   Elem=ary:getA(Array,Index-1),
-  C=Count+1,
   if
     Index > 0 andalso Elem>Wert->
       A=shiftArray(Array,Index-1,Elem,Index),
-          insertSuche(A,Index-1,Wert,C);
+          insertSuche(A,Index-1,Wert);
     true ->
-      {Index,C}
+      Index
   end.
 
 shiftArray(Array,Pos,Elem,End) ->
@@ -54,29 +53,28 @@ shiftArray(Array,Pos,Elem,End) ->
 
 selectionSort(Array) ->
   N=ary:lengthA(Array),
-  selectionSort(Array,0,N-1, 0).
+  [util:timeMilliSecond(), selectionSort(Array,0,N-1)].
 
-selectionSort(_Array,Pos,Pos, Count) -> Count;
-selectionSort(Array,Pos,End, Count) ->
+selectionSort(Array,Pos,Pos) -> util:timeMilliSecond();
+selectionSort(Array,Pos,End) ->
   Min=ary:getA(Array,Pos),
-  {IndexMin, C} = sucheMinimum(Array,Min,Pos,Pos, Count),
+  IndexMin = sucheMinimum(Array,Min,Pos,Pos),
   A=tausche(Array,Pos,IndexMin),
-  io:format("~p - ~p  ",[Count,C]),
-  selectionSort(A,Pos+1,End, C).
+  selectionSort(A,Pos+1,End).
 
-sucheMinimum(Array,Min,Pos,MinPos, Count) ->
+sucheMinimum(Array,Min,Pos,MinPos) ->
   Elem=ary:getA(Array,Pos),
   L=ary:lengthA(Array),
 
   if
     Pos+1>L ->
-      {MinPos, Count};
+      MinPos;
     true ->
       if
         Min>Elem ->
-          sucheMinimum(Array,Elem,Pos+1,Pos, Count);
+          sucheMinimum(Array,Elem,Pos+1,Pos);
         true ->
-          sucheMinimum(Array,Min,Pos+1,MinPos, Count+1)
+          sucheMinimum(Array,Min,Pos+1,MinPos)
       end
   end.
 
