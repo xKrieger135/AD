@@ -59,24 +59,24 @@ selectionSort(Array) ->
 selectionSort(_Array,Pos,Pos, Count) -> Count;
 selectionSort(Array,Pos,End, Count) ->
   Min=ary:getA(Array,Pos),
-  {IndexMin, C} = sucheMinimum(Array,Min,Pos,Pos, Count),
+  IndexMin = sucheMinimum(Array,Min,Pos,Pos),
   A=tausche(Array,Pos,IndexMin),
 %% io:format("~p - ~p  ",[Count,C]),
   selectionSort(A,Pos+1,End, C).
 
-sucheMinimum(Array,Min,Pos,MinPos, Count) ->
+sucheMinimum(Array,Min,Pos,MinPos) ->
   Elem=ary:getA(Array,Pos),
   L=ary:lengthA(Array),
 
   if
     Pos+1>L ->
-      {MinPos, Count};
+      MinPos;
     true ->
       if
         Min>Elem ->
-          sucheMinimum(Array,Elem,Pos+1,Pos, Count);
+          sucheMinimum(Array,Elem,Pos+1,Pos);
         true ->
-          sucheMinimum(Array,Min,Pos+1,MinPos, Count+1)
+          sucheMinimum(Array,Min,Pos+1,MinPos)
       end
   end.
 
