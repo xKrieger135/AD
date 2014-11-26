@@ -11,7 +11,7 @@
 -author("JanDennis").
 
 %%API
--export([sort/1,sortR/1]).
+-export([sort/2]).
 
 sort(Array, PivotAuswahl) ->
   N=arrayS:lengthA(Array),
@@ -33,10 +33,10 @@ sort(Array,Links,Rechts, PivotAuswahl) ->
   end.
 
 quickSortSwap(Array,Links,Rechts, PivotAuswahl) ->
-  io:format("Start: ~p-~p~n",[Links,Rechts]),
+  io:format("Start: ~p-~p~n  :  ~p",[Links,Rechts,PivotAuswahl]),
   LinksNeu=Links,
   RechtsNeu=Rechts-1,
-  Pivot=arrayS:getA(Array,Rechts),
+  Pivot= selectPivot(Array,LinksNeu,Rechts,PivotAuswahl),                %%arrayS:getA(Array,Rechts),
   {Ary,WertLinks} = while_L_leq_R(Array,LinksNeu,RechtsNeu,Pivot,Links,Rechts),
   io:format("quick ",[]),
   A=tauscheElemente(Ary,WertLinks,Rechts),
@@ -80,34 +80,41 @@ tauscheElemente(ZuSortierendeObjekte, WertLinks, WertRechts) ->
   Element2  = arrayS:getA(ZuSortierendeObjekte, WertRechts),
   arrayS:setA(arrayS:setA(ZuSortierendeObjekte, WertLinks, Element2), WertRechts, Element1).
 
-sortR(Array) ->
-  sortR(Array,0,arrayS:lengthA(Array)-1).
-
-sortR(Array,Links,Rechts) ->
-  if
-    Links<Rechts ->
-      {Ary,TeilElem} = quickSortSwapR(Array,Links,Rechts),
-      io:format("1 ",[]),
-      A=sort(Ary,Links,TeilElem - 1),
-
-      io:format("2 ",[]),
-      sort(A,TeilElem + 1,Rechts);
-    true -> io:format("WURSTGESCHWADER!~n"),Array
-  end.
-
-quickSortSwapR(Array,Links,Rechts) ->
-  io:format("Start: ~p-~p~n",[Links,Rechts]),
-  LinksNeu=Links,
-  RechtsNeu=Rechts-1,
-  Pivot=arrayS:getA(Array,random:uniform(arrayS:lengthA(Array))),
-  {Ary,WertLinks} = while_L_leq_R(Array,LinksNeu,RechtsNeu,Pivot,Links,Rechts),
-  io:format("quick ",[]),
-  A=tauscheElemente(Ary,WertLinks,Rechts),
-  {A,WertLinks}.
+%% sortR(Array) ->
+%%   sortR(Array,0,arrayS:lengthA(Array)-1).
+%%
+%% sortR(Array,Links,Rechts) ->
+%%   if
+%%     Links<Rechts ->
+%%       {Ary,TeilElem} = quickSortSwapR(Array,Links,Rechts),
+%%       io:format("1 ",[]),
+%%       A=sort(Ary,Links,TeilElem - 1),
+%%
+%%       io:format("2 ",[]),
+%%       sort(A,TeilElem + 1,Rechts);
+%%     true -> io:format("WURSTGESCHWADER!~n"),Array
+%%   end.
+%%
+%% quickSortSwapR(Array,Links,Rechts) ->
+%%   io:format("Start: ~p-~p~n",[Links,Rechts]),
+%%   LinksNeu=Links,
+%%   RechtsNeu=Rechts-1,
+%%   Pivot=arrayS:getA(Array,random:uniform(arrayS:lengthA(Array))),
+%%   {Ary,WertLinks} = while_L_leq_R(Array,LinksNeu,RechtsNeu,Pivot,Links,Rechts),
+%%   io:format("quick ",[]),
+%%   A=tauscheElemente(Ary,WertLinks,Rechts),
+%%   {A,WertLinks}.
 
 selectPivot(Array, WertLinks, Rechts, PivotAuswahl) ->
-  if PivotAuswahl == r ->
-       tauscheElemente(WertLinks, arrayS:getA(Array,random:uniform(arrayS:lengthA(Array))));
-     true ->
-       tauscheElemente(WertLinks, arrayS:getA(Array,Rechts))
+  if
+    PivotAuswahl == r ->
+      io:format("~n---~nPivor:Random~n~n",[]),
+      NewArray = tauscheElemente(Array, random:uniform(arrayS:lengthA(Array)), Rechts),
+      io:format("~p",[Array]),
+      io:format("~p",[NewArray]),
+      arrayS:getA(NewArray, Rechts);
+
+    true ->
+      io:format("~n---~nPivor:alternativ~n~n",[]),
+      arrayS:getA(Array,Rechts)
   end.
