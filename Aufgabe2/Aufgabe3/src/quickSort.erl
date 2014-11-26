@@ -19,8 +19,8 @@ quickSort(ZuSortierendeObjekte) ->
 quickSort(ZuSortierendeObjekte, Links, Rechts) ->
           if Links < Rechts ->
                 Teilelement = quickSortSwap(ZuSortierendeObjekte, Links, Rechts),
-                quickSort(ZuSortierendeObjekte, Links,  Teilelement - 1),
-                quickSort(ZuSortierendeObjekte, Teilelement + 1, Rechts);
+                Neu = quickSort(ZuSortierendeObjekte, Links,  Teilelement - 1),
+                quickSort(Neu, Teilelement + 1, Rechts);
              true ->
                 ZuSortierendeObjekte
           end.
