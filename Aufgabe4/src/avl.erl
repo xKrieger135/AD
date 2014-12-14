@@ -10,7 +10,7 @@
 -author("JanDennis").
 
 %% API
--export([]).
+-export([create/0,add/2,delete/2]).
 
 create() -> {}.
 
@@ -26,10 +26,12 @@ delete({Left, Value, Right}, Value) ->
   if
     Left == {} -> Right;
     Right== {} -> Left;
-    true       ->
+    true       ->  {}
+  end;
+
+delete({Left, Any, Right}, Value) ->
       Smallest = getSmallest(Right),
-      {Left,Smallest,delete(Right,Smallest)}
-end.
+      {Left,Smallest,delete(Right,Smallest)}.
 
 getSmallest({{},C,R}) -> C;
 getSmallest({L,C,R}) -> getSmallest(L).
