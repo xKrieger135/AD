@@ -30,7 +30,7 @@ create() -> {}.
 %%   if
 %%     Element < Value ->
 %%       io:format("Fuege in Den Rechten Teilbaum ein:  ~p<~p~n",[Element,Value]),
-%%       {LinkerUnterBaum, Element, {add(RechterUnterBaum, Value)}};
+%%       {LinkerUnterBaum, Element, add(RechterUnterBaum, Value)};
 %%     true             ->
 %%       io:format("Fuege in Den Linken Teilbaum ein:  ~p>~p~n",[Element,Value]),
 %%       {add(LinkerUnterBaum, Value), Element, RechterUnterBaum}
@@ -45,16 +45,28 @@ add(Baum, Value) ->
   end.
 
 adden({LinkerUnterBaum, {Element, Balance}, RechterUnterBaum}, Value) ->
+  Balance = 0,
   if
     Element < Value ->
       io:format("Fuege in Den Rechten Teilbaum ein:  ~p<~p~n",[Element,Value]),
-      {LinkerUnterBaum, {Element}, {add(RechterUnterBaum, Value)}};
+      {LinkerUnterBaum, {Element, Balance}, add(RechterUnterBaum, Value)};
     true             ->
       io:format("Fuege in Den Linken Teilbaum ein:  ~p>~p~n",[Element,Value]),
-      {add(LinkerUnterBaum, Value), Element, RechterUnterBaum}
+      {add(LinkerUnterBaum, Value), {Element, Balance}, RechterUnterBaum}
   end.
 
 %% ---------------------------------------------------------------------------------------------------------------------
+
+%% AVL - Baum - countHeight
+
+countHeight(Baum) ->
+  if
+    Baum == {}    ->
+      0;
+    Baum /= 0     ->
+      Baum
+  end.
+
 
 %% AVL - Baum - Delete
 delete({}, _Value) -> {};
@@ -84,16 +96,6 @@ getSmallest({L,C,R}) -> getSmallest(L).
 rotateRight() -> true.
 
 %% ---------------------------------------------------------------------------------------------------------------------
-
-%% AVL - Baum - countHeight
-
-countHeight(Baum) ->
-  if
-    Baum == {}    ->
-      0;
-    Baum /= 0     ->
-      Baum
-  end.
 
 %% eval({}) -> io:format("Empty~n~n",[]);
 %% eval({{},Elem,{}}) -> io:format("Last Elem - ~p~n~n",[Elem]);
