@@ -25,6 +25,7 @@ create() -> {}.
 %%         {add(LinkerUnterBaum, Value), Element, RechterUnterBaum}
 %%   end.
 
+%% AVL - Baum - Add
 add(Baum, Value) ->
   if
     Baum == {}   ->
@@ -43,7 +44,9 @@ adden({LinkerUnterBaum, Element, RechterUnterBaum}, Value) ->
       {add(LinkerUnterBaum, Value), Element, RechterUnterBaum}
   end.
 
+%% ---------------------------------------------------------------------------------------------------------------------
 
+%% AVL - Baum - Delete
 delete({}, _Value) -> {};
 delete({Left, Value, Right}, Value) ->
   io:format("~p~n",["val found."]),
@@ -63,6 +66,12 @@ delete({Left, Any, Right}, Value) ->
 
 getSmallest({{},C,R}) -> C;
 getSmallest({L,C,R}) -> getSmallest(L).
+
+%% ---------------------------------------------------------------------------------------------------------------------
+
+%% AVL - Baum - rotateRight
+
+rotateRight() -> true.
 
 
 %% eval({}) -> io:format("Empty~n~n",[]);
