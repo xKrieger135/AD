@@ -12,33 +12,43 @@
 %% API
 -export([create/0, add/2, delete/2]).
 
+%% AVL - Baum - Create()
 create() -> {}.
 
-%% add({}, Value) -> {{}, {Value}, {}};
-%% add({LinkerUnterBaum, Element, RechterUnterBaum}, Value) ->
+%% ---------------------------------------------------------------------------------------------------------------------
+
+%% AVL - Baum - Add()
+%% add(Baum, Value) ->
+%%   if
+%%     Baum == {}   ->
+%%       {{}, Value, {}};
+%%     Baum /= {}   ->
+%%       adden(Baum, Value)
+%%   end.
+%%
+%% adden({LinkerUnterBaum, Element, RechterUnterBaum}, Value) ->
 %%   if
 %%     Element < Value ->
-%%       io:format("JUHU~n"),
-%%         {LinkerUnterBaum, Element, {add(RechterUnterBaum, Value)}};
+%%       io:format("Fuege in Den Rechten Teilbaum ein:  ~p<~p~n",[Element,Value]),
+%%       {LinkerUnterBaum, Element, {add(RechterUnterBaum, Value)}};
 %%     true             ->
-%%       io:format("Wenn die Elf hier ist FALSCH: -> ~p<~p~n",[Element,Value]),
-%%         {add(LinkerUnterBaum, Value), Element, RechterUnterBaum}
+%%       io:format("Fuege in Den Linken Teilbaum ein:  ~p>~p~n",[Element,Value]),
+%%       {add(LinkerUnterBaum, Value), Element, RechterUnterBaum}
 %%   end.
 
-%% AVL - Baum - Add
 add(Baum, Value) ->
   if
     Baum == {}   ->
-      {{}, Value, {}};
+      {{}, {Value, 0}, {}};
     Baum /= {}   ->
       adden(Baum, Value)
   end.
 
-adden({LinkerUnterBaum, Element, RechterUnterBaum}, Value) ->
+adden({LinkerUnterBaum, {Element, Balance}, RechterUnterBaum}, Value) ->
   if
     Element < Value ->
       io:format("Fuege in Den Rechten Teilbaum ein:  ~p<~p~n",[Element,Value]),
-      {LinkerUnterBaum, Element, {add(RechterUnterBaum, Value)}};
+      {LinkerUnterBaum, {Element}, {add(RechterUnterBaum, Value)}};
     true             ->
       io:format("Fuege in Den Linken Teilbaum ein:  ~p>~p~n",[Element,Value]),
       {add(LinkerUnterBaum, Value), Element, RechterUnterBaum}
@@ -73,6 +83,17 @@ getSmallest({L,C,R}) -> getSmallest(L).
 
 rotateRight() -> true.
 
+%% ---------------------------------------------------------------------------------------------------------------------
+
+%% AVL - Baum - countHeight
+
+countHeight(Baum) ->
+  if
+    Baum == {}    ->
+      0;
+    Baum /= 0     ->
+      Baum
+  end.
 
 %% eval({}) -> io:format("Empty~n~n",[]);
 %% eval({{},Elem,{}}) -> io:format("Last Elem - ~p~n~n",[Elem]);
