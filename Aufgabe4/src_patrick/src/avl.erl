@@ -74,7 +74,8 @@ rotateRightNow({LinkerUnterBaum, Element, RechterUnterBaum}) ->
     true ->
       if
         RechterUnterBaum /= {} ->
-          rotateRightNow(LinkerUnterBaum);
+%%           rotateRightNow(LinkerUnterBaum);
+        {rotateRightNow(LinkerUnterBaum),Element,RechterUnterBaum};
         true ->
           {LinkerUnterBaum, Element, RechterUnterBaum}
       end
