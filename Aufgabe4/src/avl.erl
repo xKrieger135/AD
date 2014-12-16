@@ -17,43 +17,43 @@ create() -> {}.
 
 %% ---------------------------------------------------------------------------------------------------------------------
 
-%% AVL - Baum - Add()
-%% add(Baum, Value) ->
-%%   if
-%%     Baum == {}   ->
-%%       {{}, Value, {}};
-%%     Baum /= {}   ->
-%%       adden(Baum, Value)
-%%   end.
-%%
-%% adden({LinkerUnterBaum, Element, RechterUnterBaum}, Value) ->
-%%   if
-%%     Element < Value ->
-%%       io:format("Fuege in Den Rechten Teilbaum ein:  ~p<~p~n",[Element,Value]),
-%%       {LinkerUnterBaum, Element, add(RechterUnterBaum, Value)};
-%%     true             ->
-%%       io:format("Fuege in Den Linken Teilbaum ein:  ~p>~p~n",[Element,Value]),
-%%       {add(LinkerUnterBaum, Value), Element, RechterUnterBaum}
-%%   end.
-
+%%AVL - Baum - Add()
 add(Baum, Value) ->
   if
     Baum == {}   ->
-      {{}, {Value, 0}, {}};
+      {{}, Value, {}};
     Baum /= {}   ->
       adden(Baum, Value)
   end.
 
-adden({LinkerUnterBaum, {Element, Balance}, RechterUnterBaum}, Value) ->
-  Balance = 0,
+adden({LinkerUnterBaum, Element, RechterUnterBaum}, Value) ->
   if
     Element < Value ->
       io:format("Fuege in Den Rechten Teilbaum ein:  ~p<~p~n",[Element,Value]),
-      {LinkerUnterBaum, {Element, Balance}, add(RechterUnterBaum, Value)};
+      {LinkerUnterBaum, Element, add(RechterUnterBaum, Value)};
     true             ->
       io:format("Fuege in Den Linken Teilbaum ein:  ~p>~p~n",[Element,Value]),
-      {add(LinkerUnterBaum, Value), {Element, Balance}, RechterUnterBaum}
+      {add(LinkerUnterBaum, Value), Element, RechterUnterBaum}
   end.
+
+%% add(Baum, Value) ->
+%%   if
+%%     Baum == {}   ->
+%%       {{}, {Value, 0}, {}};
+%%     Baum /= {}   ->
+%%       adden(Baum, Value)
+%%   end.
+%%
+%% adden({LinkerUnterBaum, {Element, Balance}, RechterUnterBaum}, Value) ->
+%%   Balance = 0,
+%%   if
+%%     Element < Value ->
+%%       io:format("Fuege in Den Rechten Teilbaum ein:  ~p<~p~n",[Element,Value]),
+%%       {LinkerUnterBaum, {Element, Balance}, add(RechterUnterBaum, Value)};
+%%     true             ->
+%%       io:format("Fuege in Den Linken Teilbaum ein:  ~p>~p~n",[Element,Value]),
+%%       {add(LinkerUnterBaum, Value), {Element, Balance}, RechterUnterBaum}
+%%   end.
 
 %% ---------------------------------------------------------------------------------------------------------------------
 
@@ -86,8 +86,8 @@ delete({Left, Any, Right}, Value) ->
     true -> io:format("Left~n",[]),{delete(Left,Value),Any,Right}
   end.
 
-getSmallest({{},C,R}) -> C;
-getSmallest({L,C,R}) -> getSmallest(L).
+getSmallest({{},C,_R}) -> C;
+getSmallest({L,_C,_R}) -> getSmallest(L).
 
 %% ---------------------------------------------------------------------------------------------------------------------
 
@@ -97,13 +97,13 @@ rotateRight() -> true.
 
 %% ---------------------------------------------------------------------------------------------------------------------
 
-%% eval({}) -> io:format("Empty~n~n",[]);
-%% eval({{},Elem,{}}) -> io:format("Last Elem - ~p~n~n",[Elem]);
-%% eval({L,E,R}) ->
-%%   io:format("Top   - ~p~n",[E]),
-%%   io:format("Left  - ~p~n",[L]),
-%%   io:format("Right - ~p~n~n",[R]),
-%%   io:format("Next -> Left~n",[]),
-%%   eval(L),
-%%   io:format("Next -> Right~n",[]),
-%%   eval(R).
+eval({}) -> io:format("Empty~n~n",[]);
+eval({{},Elem,{}}) -> io:format("Last Elem - ~p~n~n",[Elem]);
+eval({L,E,R}) ->
+  io:format("Top   - ~p~n",[E]),
+  io:format("Left  - ~p~n",[L]),
+  io:format("Right - ~p~n~n",[R]),
+  io:format("Next -> Left~n",[]),
+  eval(L),
+  io:format("Next -> Right~n",[]),
+  eval(R).
