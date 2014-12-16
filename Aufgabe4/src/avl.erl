@@ -10,7 +10,7 @@
 -author("Son-Patrick und Son-Jan").
 
 %% API
--export([create/0, add/2, delete/2]).
+-export([create/0, add/2, delete/2, eval/1, diff/1]).
 
 %% AVL - Baum - Create()
 create() -> {}.
@@ -107,3 +107,20 @@ eval({L,E,R}) ->
   eval(L),
   io:format("Next -> Right~n",[]),
   eval(R).
+
+
+diff({L,E,R}) ->
+  NL=getMax(L),
+  NR=getMax(R),
+  NR-NL.
+
+getMax(Tree) ->
+  getMax(Tree,0).
+
+getMax({},C) -> C;
+getMax({{},_E,R},C) ->
+  getMax(R,C+1);
+getMax({L,_E,{}},C) ->
+  getMax(L,C+1);
+getMax({L,_E,R},C) ->
+  max(getMax(L,C+1),getMax(R,C+1)).
