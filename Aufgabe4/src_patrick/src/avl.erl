@@ -72,7 +72,13 @@ rotateRightNow({LinkerUnterBaum, Element, RechterUnterBaum}) ->
      BalanceMinusZwei andalso BalanceMinusEins ->
       {{{}, getElement(goDeeperForRotateRight(LinkerUnterBaum)), {}},getElement(LinkerUnterBaum), {{}, Element, {}}};
     true ->
-      {LinkerUnterBaum, Element, RechterUnterBaum}
+      if
+        RechterUnterBaum /= {} ->
+          rotateRightNow(LinkerUnterBaum);
+        true ->
+          {LinkerUnterBaum, Element, RechterUnterBaum}
+      end
+
   end.
 
 goDeeperForRotateRight({LinkerUnterBaum, Element, RechterUnterBaum}) ->
@@ -93,10 +99,15 @@ rotateLeftNow({LinkerUnterBaum, Element, RechterUnterBaum}) ->
   BalanceMinusEins = diff(RechterUnterBaum) == +1,
   if
     BalanceMinusZwei andalso BalanceMinusEins ->
-%%       {{{}, getElement(goDeeperForRotateLeft(RechterUnterBaum)), {}},getElement(RechterUnterBaum), {{}, Element, {}}};
       {{{}, Element, {}}, getElement(RechterUnterBaum),{{}, getElement(goDeeperForRotateLeft(RechterUnterBaum)), {}}};
     true ->
-      {LinkerUnterBaum, Element, RechterUnterBaum}
+        if
+          LinkerUnterBaum /= {} ->
+            rotateLeftNow(LinkerUnterBaum);
+          true ->
+            {LinkerUnterBaum, Element, RechterUnterBaum}
+        end
+
   end.
 
 goDeeperForRotateLeft({LinkerUnterBaum, Element, RechterUnterBaum}) ->
