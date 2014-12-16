@@ -10,7 +10,7 @@
 -author("Son-Patrick und Son-Jan").
 
 %% API
--export([create/0, add/2, delete/2, eval/1, diff/1]).
+-export([create/0, add/2, delete/2, eval/1, diff/1, toGraph/1, readlines/1]).
 
 %% AVL - Baum - Create()
 create() -> {}.
@@ -109,7 +109,7 @@ eval({L,E,R}) ->
   eval(R).
 
 
-diff({L,E,R}) ->
+diff({L,_E,R}) ->
   NL=getMax(L),
   NR=getMax(R),
   NR-NL.
@@ -124,3 +124,41 @@ getMax({L,_E,{}},C) ->
   getMax(L,C+1);
 getMax({L,_E,R},C) ->
   max(getMax(L,C+1),getMax(R,C+1)).
+
+
+toGraph(Tree) ->
+  file:write_file("test.dot", io_lib:fwrite("digraph avltree\n{\n",[]),[write]),
+  writeGraph(Tree),
+  file:write_file("test.dot", io_lib:fwrite("}",[]),[append]).
+
+writeGraph({{},_E,{}}) ->ok;
+writeGraph({L,E,{}}) ->
+  file:write_file("test.dot", io_lib:fwrite("~p -> ~p [label=~p];~n",[E,getElem(L),getMax(L)+1]),[append]),
+  writeGraph(L);
+writeGraph({{},E,R}) ->
+  file:write_file("test.dot", io_lib:fwrite("~p -> ~p [label=~p];~n",[E,getElem(R),getMax(R)+1]),[append]),
+  writeGraph(R);
+writeGraph({L,E,R}) ->
+  file:write_file("test.dot", io_lib:fwrite("~p -> ~p [label=~p];~n",[E,getElem(L),getMax(L)+1]),[append]),
+  file:write_file("test.dot", io_lib:fwrite("~p -> ~p [label=~p];~n",[E,getElem(R),getMax(R)+1]),[append]),
+  writeGraph(L),
+  writeGraph(R).
+
+
+getElem({_L,E,_R}) -> E.
+
+readlines(FileName) ->
+  {ok, Data} = file:read_file(FileName),
+  binary:split(Data, [<<"\n">>], [global]).
+
+
+rotate({L,E,R}) ->
+  BO=diff({L,E,R}),
+  BUL=diff(L),
+  BUR=diff(R),
+  if
+    BO==-2 andalso BUR==-1 -> rotateRight({L,E,R});
+    BO==2  andalso BUL==1  -> rotateLeft({L,E,R});
+    BO==-2 andalso BUL==1  -> rotateLeftRight({L,E,R});
+    BO==2  andalso BUR==-1 -> rotateRightLeft({L,E,R});
+  end.
