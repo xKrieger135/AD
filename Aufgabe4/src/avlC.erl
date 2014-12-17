@@ -20,7 +20,7 @@ create() -> {}.
 %% AVL - Baum - Add()
 add(Any, {}) -> Any;
 add({}, Value) -> {{}, {Value, 1}, {}};
-add({LinkerUnterBaum, {Element, Height}, RechterUnterBaum}, Value) ->
+add({LinkerUnterBaum, {Element, _Height}, RechterUnterBaum}, Value) ->
   if
     Element < Value ->
       io:format("Fuege in Den Rechten Teilbaum ein:  ~p<~p~n", [Element, Value]),
@@ -37,25 +37,27 @@ add({LinkerUnterBaum, {Element, Height}, RechterUnterBaum}, Value) ->
 
 %% AVL - Baum - Delete
 delete({}, _Value) -> {};
-delete({LinkerUnterBaum, Element, RechterUnterBaum}, Element) ->
+delete({LinkerUnterBaum, {Element, _Hoehe}, RechterUnterBaum}, Element) ->
   io:format("~p~n", ["val found."]),
   if
-    LinkerUnterBaum == {} -> RechterUnterBaum;
-    RechterUnterBaum == {} -> LinkerUnterBaum;
-    true -> Smallest = getSmallest(RechterUnterBaum),
-      {LinkerUnterBaum, Smallest, delete(RechterUnterBaum, Smallest)}
+      LinkerUnterBaum == {} -> RechterUnterBaum;
+      RechterUnterBaum == {} -> LinkerUnterBaum;
+    true ->
+      Smallest = getSmallest(RechterUnterBaum),
+      {LinkerUnterBaum, {Smallest,x}, delete(RechterUnterBaum, Smallest)}
   end;
 
-delete({LinkerUnterBaum, Any, RechterUnterBaum}, Value) ->
+delete({LinkerUnterBaum, {Any, _Hoehe}, RechterUnterBaum}, Value) ->
   io:format("Go deeper - ", []),
   if
     Any < Value ->
       io:format("Right~n", []),
-      {LinkerUnterBaum, Any, delete(RechterUnterBaum, Value)};
+      Baum = {LinkerUnterBaum, {Any,x}, delete(RechterUnterBaum, Value)};
     true ->
       io:format("Left~n", []),
-      {delete(LinkerUnterBaum, Value), Any, RechterUnterBaum}
-  end.
+      Baum = {delete(LinkerUnterBaum, Value), {Any, x}, RechterUnterBaum}
+  end,
+  rotate(setHeight(Baum)).
 
 getSmallest({{}, Element, _RechterUnterBaum}) -> Element;
 getSmallest({LinkerUnterBaum, _Element, _RechterUnterBaum}) -> getSmallest(LinkerUnterBaum).
@@ -66,25 +68,17 @@ getSmallest({LinkerUnterBaum, _Element, _RechterUnterBaum}) -> getSmallest(Linke
 rotate({}) -> {};
 rotate({{}, {E, H}, {}}) -> {{}, {E, H}, {}};
 rotate({LinkerUnterBaum, {Element, H}, RechterUnterBaum}) ->
-%%   BalanceMinusZwei = balance({LinkerUnterBaum, Element, RechterUnterBaum}) == - 2,
-%%   BalanceMinusEins = balance(LinkerUnterBaum) == - 1,
-%%   BalancePlusZwei = balance({LinkerUnterBaum, Element, RechterUnterBaum}) == + 2,
-%%   BalancePlusEins = balance(RechterUnterBaum) == + 1,
   BO = balance({LinkerUnterBaum, {Element, H}, RechterUnterBaum}),
   BUL = balance(LinkerUnterBaum),
   BUR = balance(RechterUnterBaum),
   io:format("BO:~p  BUL:~p  BUR:~p~n",[BO,BUL,BUR]),
   if
-%%      BalanceMinusZwei andalso BalanceMinusEins  -> rotateRight({LinkerUnterBaum, Element, RechterUnterBaum});
-%%      BalancePlusZwei andalso BalancePlusEins    -> rotateLeft({LinkerUnterBaum, Element, RechterUnterBaum});
-    BO == -2  andalso BUL == -1  -> io:format("RechtsRotation.~n",[]),rotateRight({LinkerUnterBaum, {Element,H}, RechterUnterBaum});
-    BO == 2  andalso BUR == 1  -> io:format("LinksRotation.~n",[]),rotateLeft({LinkerUnterBaum, {Element,H}, RechterUnterBaum});
-    BO == -2 andalso BUL == 1 -> rotateLeftRight({LinkerUnterBaum, {Element, H}, RechterUnterBaum});
-    BO == 2 andalso BUR == -1 -> rotateRightLeft({LinkerUnterBaum, {Element, H}, RechterUnterBaum});
+    BO ==  -2  andalso BUL ==  -1    -> io:format("RechtsRotation.~n",[]),rotateRight({LinkerUnterBaum, {Element,H}, RechterUnterBaum});
+    BO ==   2  andalso BUR ==   1    -> io:format("LinksRotation.~n",[]),rotateLeft({LinkerUnterBaum, {Element,H}, RechterUnterBaum});
+    BO ==  -2  andalso BUL ==   1    -> rotateLeftRight({LinkerUnterBaum, {Element, H}, RechterUnterBaum});
+    BO ==   2  andalso BUR ==  -1    -> rotateRightLeft({LinkerUnterBaum, {Element, H}, RechterUnterBaum});
     true ->
       io:format("Keine Rotation notwendig.~n",[]),
-      %L=rotate(LinkerUnterBaum),
-      %R=rotate(RechterUnterBaum),
       {LinkerUnterBaum, {Element, H}, RechterUnterBaum}
   end.
 
@@ -104,10 +98,10 @@ getRightElem({_L, _E, R}) -> getElement(R).
 %% AVL BAUM rotateLeft()
 %% Rotiert den Baum links herum
 
-rotateLeft({L, {B, _HB}, {R2, {A, _HA}, R1}}) ->
-  NHA = max(getHeight(R2), getHeight(R1)) + 1,
-  NHB = max(getHeight(L), NHA) + 1,
-  {{L, {B, NHB}, R2}, {A, NHA}, R1}.
+rotateLeft({L1, {A, _HA}, {L2, {B, _HB}, R}}) ->
+  NHA = max(getHeight(L1), getHeight(L2)) + 1,
+  NHB = max(getHeight(R), NHA) + 1,
+  {{L1, {A, NHA}, L2}, {B, NHB}, R}.
 
 rotateLeftRight(Baum) ->
   io:format("Left & Right~n", []),
@@ -161,7 +155,7 @@ balance({LinkerUnterBaum, _Element, RechterUnterBaum}) ->
   HoeheRechts - HoeheLinks.
 
 getHeight({}) -> 0;
-getHeight({L, {E, H}, R}) -> H.
+getHeight({_LinkerUnterBaum, {_Element, Hoehe}, _RechterUnterBaum}) -> Hoehe.
 
 %% ---------------------------------------------------------------------------------------------------------------------
 
@@ -172,8 +166,6 @@ toGraph(Tree) ->
   writeGraph(Tree, File),
   file:write_file(File, io_lib:fwrite("}", []), [append]),
   os:cmd("exec.bat").
-%%   os:cmd("dot -Tpng test.dot > test.png"),
-%%   os:cmd("test.png").
 
 writeGraph({{}, _E, {}}, _File) -> ok;
 writeGraph({L, {E, H}, {}}, File) ->
@@ -187,12 +179,8 @@ writeGraph({L, {E, H}, R}, File) ->
   file:write_file(File, io_lib:fwrite("~p:~p -> ~p;~n", [E, H, getElement(R)]), [append]),
   writeGraph(L, File),
   writeGraph(R, File).
-%%
-%% readlines(FileName) ->
-%%   {ok, Data} = file:read_file(FileName),
-%%   binary:split(Data, [<<"\n">>], [global]).
 
 %% ---------------------------------------------------------------------------------------------------------------------
 
-setHeight({L, {E, _H}, R}) ->
-  {L, {E, max(getHeight(L), getHeight(R)) + 1}, R}.
+setHeight({LinkerUnterBaum, {Element, _Hoehe}, RechterUnterBaum}) ->
+  {LinkerUnterBaum, {Element, max(getHeight(LinkerUnterBaum), getHeight(RechterUnterBaum)) + 1}, RechterUnterBaum}.
