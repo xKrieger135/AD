@@ -44,7 +44,7 @@ delete({LinkerUnterBaum, {Element, _Hoehe}, RechterUnterBaum}, Element) ->
       RechterUnterBaum == {} -> LinkerUnterBaum;
     true ->
       Smallest = getSmallest(RechterUnterBaum),
-      {LinkerUnterBaum, {Smallest,x}, delete(RechterUnterBaum, Smallest)}
+      setHeight({LinkerUnterBaum, {Smallest,x}, delete(RechterUnterBaum, Smallest)})
   end;
 
 delete({LinkerUnterBaum, {Any, _Hoehe}, RechterUnterBaum}, Value) ->
@@ -59,8 +59,8 @@ delete({LinkerUnterBaum, {Any, _Hoehe}, RechterUnterBaum}, Value) ->
   end,
   rotate(setHeight(Baum)).
 
-getSmallest({{}, Element, _RechterUnterBaum}) -> Element;
-getSmallest({LinkerUnterBaum, _Element, _RechterUnterBaum}) -> getSmallest(LinkerUnterBaum).
+getSmallest({{}, {Element,_H}, _RechterUnterBaum}) -> Element;
+getSmallest({LinkerUnterBaum, {_Element,_H}, _RechterUnterBaum}) -> getSmallest(LinkerUnterBaum).
 
 %% ---------------------------------------------------------------------------------------------------------------------
 
@@ -169,14 +169,14 @@ toGraph(Tree) ->
 
 writeGraph({{}, _E, {}}, _File) -> ok;
 writeGraph({L, {E, H}, {}}, File) ->
-  file:write_file(File, io_lib:fwrite("~p:~p -> ~p;~n", [E, H, getElement(L)]), [append]),
+  file:write_file(File, io_lib:fwrite("~p -> ~p;~n", [E, getElement(L)]), [append]),
   writeGraph(L, File);
 writeGraph({{}, {E, H}, R}, File) ->
-  file:write_file(File, io_lib:fwrite("~p:~p -> ~p;~n", [E, H, getElement(R)]), [append]),
+  file:write_file(File, io_lib:fwrite("~p -> ~p;~n", [E, getElement(R)]), [append]),
   writeGraph(R, File);
 writeGraph({L, {E, H}, R}, File) ->
-  file:write_file(File, io_lib:fwrite("~p:~p -> ~p;~n", [E, H, getElement(L)]), [append]),
-  file:write_file(File, io_lib:fwrite("~p:~p -> ~p;~n", [E, H, getElement(R)]), [append]),
+  file:write_file(File, io_lib:fwrite("~p -> ~p;~n", [E, getElement(L)]), [append]),
+  file:write_file(File, io_lib:fwrite("~p -> ~p;~n", [E, getElement(R)]), [append]),
   writeGraph(L, File),
   writeGraph(R, File).
 
